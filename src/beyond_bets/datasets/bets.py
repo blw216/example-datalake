@@ -1,6 +1,6 @@
 import math
 
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 from pyspark.sql.types import (
     StructType,
     StructField,
@@ -10,10 +10,11 @@ from pyspark.sql.types import (
     TimestampType,
 )
 from beyond_bets.base.dataset import Dataset
+from beyond_bets.utils.spark import SparkManager
 from datetime import datetime, date, timedelta
 from random import Random
 
-spark = SparkSession.builder.getOrCreate()
+spark = SparkManager.get_session()
 
 
 def get_rand_stream(seed: int) -> Random:

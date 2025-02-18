@@ -1,10 +1,10 @@
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 from pyspark.sql.types import StructType, StructField, IntegerType
 from beyond_bets.base.dataset import Dataset
+from beyond_bets.utils.spark import SparkManager
 
 
-spark = SparkSession.builder.getOrCreate()
-
+spark = SparkManager.get_session()
 
 class Numbers(Dataset):
 

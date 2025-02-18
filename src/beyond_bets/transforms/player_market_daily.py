@@ -4,17 +4,18 @@ from beyond_bets.datasets.bets import Bets
 from pyspark.sql import functions as F
 from typing import Any
 
-class MarketHourly(Transform):
+
+class PlayerMarketDaily(Transform):
 
     def __init__(self):
         super().__init__()
-        self._name: str = "MarketHourly"
+        self._name: str = "PlayerMarketDaily"
 
         self._inputs = {"bets": Bets()}
 
     def _transformation(self, **kwargs: dict[str, Any]) -> DataFrame:
         """
-        This transform calculates the total bets for each market and hour.
+        This transform calculates the total bets for each player, market and date.
         """
         num_partitions = kwargs.get("num_partitions")
         if num_partitions is not None:
@@ -22,7 +23,7 @@ class MarketHourly(Transform):
 
         return (
             self.bets
-            .withColumn("hour", F.date_trunc("hour", F.col("timestamp")))
-            .groupBy("market", "hour")
+            .withColumn("date", F.to_date(F.col("timestamp")))
+            .groupBy("player_id", "market", "date")
             .agg(F.sum(F.col("bet_amount")).alias("total_bets"))
         )
